@@ -36,6 +36,31 @@ test('Invalid schema', () => {
   }
 })
 
+test('Invalid null schema', () => {
+  const result = validate({
+    body: null,
+    schema: schema
+  })
+  expect(result.hasErrors).toEqual(true)
+})
+
+test('Invalid undefined schema', () => {
+  const result = validate({
+    body: undefined,
+    schema: schema
+  })
+  expect(result.hasErrors).toEqual(true)
+})
+
+test('Valid null schema', () => {
+  const result = validate({
+    body: null,
+    canBeNull: true,
+    schema: schema
+  })
+  expect(result.hasErrors).toEqual(true)
+})
+
 test('Valid schema', () => {
   const result = validate({
     body: {

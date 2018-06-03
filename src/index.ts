@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from 'util'
 import { Schema, validate as jsonschemaValidate } from 'jsonschema'
 
 export interface Resolve {
@@ -23,6 +24,8 @@ export function validate (options: {
    * The resolve method of the request. If set and errors were found the method will be called.
    */
   resolve?: Resolve,
+  /** The body can be null or undefined. False by default. */
+  canBeNull?: boolean,
   /**
    * The next method of the request. If set and errors were fould, the method will be called.
    */
@@ -37,13 +40,19 @@ export function validate (options: {
   bodyName?: string
 }): CheckBodyResult {
   const result = jsonschemaValidate(options.body, options.schema)
+  const bodyName = options.bodyName || 'body'
+  const canBeNull = options.canBeNull || false
   const errorMessages: string[] = []
 
-  for (let error of result.errors) {
-    // TODO: Find if there is a better way to replace 'instance' in the message string
-    let message: string = error.property.replace(new RegExp('^instance'), options.bodyName || 'body')
-    message += ` ${error.message}`
-    errorMessages.push(message)
+  if (isNullOrUndefined(options.body) && !canBeNull) {
+    errorMessages.push(`${bodyName} must be set`)
+  } else {
+    for (let error of result.errors) {
+      // TODO: Find if there is a better way to replace 'instance' in the message string
+      let message: string = error.property.replace(new RegExp('^instance'), bodyName)
+      message += ` ${error.message}`
+      errorMessages.push(message)
+    }
   }
 
   if (errorMessages.length > 0) {
