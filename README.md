@@ -26,11 +26,11 @@ const schema: Schema = {
   required: ['name']
 }
 
-// req, res and next are parameters of an endpoint function
+// res and next are parameters of an endpoint function
 validate({
   body: { address: {} },
   schema: schema,
-  request: req,
+  response: res,
   next: next,
   errorCode: 'fancyErrorCode',
   bodyName: 'body'

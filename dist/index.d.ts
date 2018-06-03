@@ -1,5 +1,5 @@
 import { Schema } from 'jsonschema';
-export interface Resolve {
+export interface Response {
     send(errorCode: any, response: any): any;
 }
 export interface CheckBodyResult {
@@ -17,15 +17,19 @@ export declare function validate(options: {
      */
     schema: Schema;
     /**
-     * The resolve method of the request. If set and errors were found the method will be called.
+     * The response object of the request. If set and errors were found the method will be called.
      */
-    resolve?: Resolve;
+    response?: Response;
+    /**
+     * The body can be null or undefined. False by default.
+     */
+    canBeNull?: boolean;
     /**
      * The next method of the request. If set and errors were fould, the method will be called.
      */
     next?: (() => any);
     /**
-     * The error code to return in the resolve method. Default is 400.
+     * The error code to return in the response. Default is 400.
      */
     errorCode?: number | string;
     /**

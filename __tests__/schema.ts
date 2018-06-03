@@ -1,4 +1,4 @@
-import { validate, Resolve } from '../src'
+import { validate } from '../src'
 import { Schema } from 'jsonschema'
 import * as console from 'console'
 import { formatDiagnosticsWithColorAndContext } from 'typescript'

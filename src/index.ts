@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from 'util'
 import { Schema, validate as jsonschemaValidate } from 'jsonschema'
 
-export interface Resolve {
+export interface Response {
   send (errorCode: any, response: any)
 }
 
@@ -21,17 +21,19 @@ export function validate (options: {
    */
   schema: Schema,
   /**
-   * The resolve method of the request. If set and errors were found the method will be called.
+   * The response object of the request. If set and errors were found the method will be called.
    */
-  resolve?: Resolve,
-  /** The body can be null or undefined. False by default. */
+  response?: Response,
+  /**
+   * The body can be null or undefined. False by default.
+   */
   canBeNull?: boolean,
   /**
    * The next method of the request. If set and errors were fould, the method will be called.
    */
   next?: (() => any),
   /**
-   * The error code to return in the resolve method. Default is 400.
+   * The error code to return in the response. Default is 400.
    */
   errorCode?: number | string,
   /**
@@ -56,8 +58,8 @@ export function validate (options: {
   }
 
   if (errorMessages.length > 0) {
-    if (options.resolve) {
-      options.resolve.send(options.errorCode || 400, { errors: errorMessages })
+    if (options.response) {
+      options.response.send(options.errorCode || 400, { errors: errorMessages })
     }
     if (options.next) {
       options.next()
